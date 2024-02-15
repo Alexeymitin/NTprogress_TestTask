@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
 import { Currency, CurrencySelect } from 'src/entities/Currency';
 import { Button, ButtonTheme } from 'src/shared/ui/Button/Button';
 import cls from './Ticker.module.scss';
@@ -18,11 +18,12 @@ export const Ticker = () => {
 		console.log(formData);
 	};
 
-	const handleCurrencyChange = (value: Currency) => {
+	const handleCurrencyChange = useCallback((value: Currency) => {
 		setCurrency(value);
-	};
+	},[]);
 	
 	const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
+		e.target.value = e.target.value.replace(/[^0-9]/g, '');
 		setAmount(e.target.value);
 	};
 
@@ -32,17 +33,18 @@ export const Ticker = () => {
 				value={currency} 
 				onChange={handleCurrencyChange}
 			/>
+			<input 
+				type="text" 
+				onChange={handleAmountChange} 
+				placeholder='Введите сумму' 
+				className={cls.inputAmount}
+				maxLength={7}
+			/>	
 			<div>
-				<label htmlFor="amount">Сумма:</label>
-				<input type="text" id="amount" onChange={handleAmountChange} placeholder='Введите сумму'/>
+				<div>85</div>
+				<div>86</div>
 			</div>
-			<div>
-				<label>Цена продажи: 85</label>
-			</div>
-			<div>
-				<label>Цена покупки: 86</label>
-			</div>
-			<div>
+			<div className={cls.buttonWrapper}>
 				<Button theme={ButtonTheme.BUY} type='submit'>BUY</Button>
 				<Button theme={ButtonTheme.SELL} type='submit'>SELL</Button>
 			</div>

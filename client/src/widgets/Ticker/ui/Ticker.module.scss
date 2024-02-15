@@ -7,3 +7,22 @@
 	border: 2px solid black;
 	gap: 10px;
 }
+
+.inputAmount {
+	height: 40px;
+	width: 100%;
+	padding: 8px;
+	text-align-last: center;
+	border: 1px solid black;
+	&::placeholder {
+		color: grey;
+	}
+}
+
+.buttonWrapper {
+	display: flex;
+	gap: 20px;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+}

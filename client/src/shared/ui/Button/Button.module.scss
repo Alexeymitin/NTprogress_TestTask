@@ -1,14 +1,17 @@
 .button {
 	cursor: pointer;
 	padding: 20px;
+	width: 50%;
+	color: black;
+	font-weight: 700;
 }
 
 .buy {
-	background: red;
+	background: rgba(245, 96, 96, 0.904);
 }
 
 .sell {
-	background: green;
+	background: rgba(122, 243, 122, 0.884);
 }
 
 .clear {
@@ -22,4 +25,3 @@
 .disabled {
 	opacity: 0.5;
 }
-
