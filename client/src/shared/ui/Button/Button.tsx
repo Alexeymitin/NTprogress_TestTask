@@ -8,9 +8,12 @@ export enum ButtonTheme {
 	CLEAR = 'clear',
 }
 
+export type ButtonType = 'button' | 'submit' | 'reset';
+
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
 	className?: string;
 	theme?: ButtonTheme;
+	type?: ButtonType;
 	disabled?: boolean;
 	children?: ReactNode;
 	onClick?: () => void;
@@ -21,6 +24,7 @@ export const Button = memo((props: ButtonProps) => {
 		className,
 		children,
 		theme = ButtonTheme.CLEAR,
+		type,
 		disabled,
 		onClick,
 		...otherProps
@@ -32,7 +36,7 @@ export const Button = memo((props: ButtonProps) => {
 
 	return (
 		<button 
-			type='button'
+			type={type}
 			className={classNames(cls.button, mods, [className, cls[theme]])}
 			disabled={disabled}
 			onClick={onClick}

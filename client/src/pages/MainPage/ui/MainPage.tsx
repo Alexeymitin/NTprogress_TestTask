@@ -1,10 +1,9 @@
-import { Button, ButtonTheme } from 'src/shared/ui/Button/Button';
+import { Ticker } from 'src/widgets/Ticker';
 
 const MainPage = () => {
 	return (
 		<main>
-			<Button theme={ButtonTheme.BUY}>BUY</Button>
-			<Button theme={ButtonTheme.SELL}>SELL</Button>
+			<Ticker/>
 		</main>
 	);
 };

@@ -1,11 +1,11 @@
 import { classNames } from './classNames';
 
 describe('classNames', () => {
-	test('with only first param', () => {
+	test('Работает , если передан только один параметр', () => {
 		expect(classNames('someClass')).toBe('someClass');
 	});
 
-	test('with additional class', () => {
+	test('Массив классов появляется в списке классов', () => {
 		const expected = 'someClass class1 class2';
 		expect(classNames(
 			'someClass', 
@@ -14,7 +14,7 @@ describe('classNames', () => {
 		)).toBe(expected);
 	});
 
-	test('with mods only true', () => {
+	test('Моды в значение true появляются в списке классов', () => {
 		const expected = 'someClass class1 class2 hovered scrollable';
 		expect(classNames(
 			'someClass', 
@@ -23,7 +23,7 @@ describe('classNames', () => {
 		)).toBe(expected);
 	});
 
-	test('with mods false', () => {
+	test('Моды в значение false не появляются в списке классов', () => {
 		const expected = 'someClass class1 class2 hovered';
 		expect(classNames(
 			'someClass', 
@@ -32,7 +32,7 @@ describe('classNames', () => {
 		)).toBe(expected);
 	});
 
-	test('with mods undefined', () => {
+	test('Моды со значением undefined не появляются в списке классов', () => {
 		const expected = 'someClass class1 class2 hovered';
 		expect(classNames(
 			'someClass', 
