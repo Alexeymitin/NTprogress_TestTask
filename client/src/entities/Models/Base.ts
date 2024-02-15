@@ -1,6 +1,6 @@
-import Decimal from "decimal.js";
-import {ClientMessage} from "./ClientMessages";
-import {ServerMessage} from "./ServerMessages";
+import Decimal from 'decimal.js';
+import {ClientMessage} from './ClientMessages';
+import {ServerMessage} from './ServerMessages';
 
 export interface Envelope {
     messageType: ClientMessage | ServerMessage
