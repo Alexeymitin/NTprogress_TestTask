@@ -16,6 +16,7 @@ import { useMemo } from 'react';
 
 
 import {data} from './fakeData';
+import { ws } from 'src/shared/websocket/websocket';
 
 
 export const Table = () => {
@@ -50,9 +51,6 @@ export const Table = () => {
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 	});
-
-	
-
 	
 	return (
 		<div className="p-2">
