@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import TypeVar
+from typing import Optional, TypeVar
 
 import bidict as bidict
 
@@ -24,7 +24,9 @@ class SuccessInfo(ServerMessage):
 
 class ExecutionReport(ServerMessage):
     order_id: str
-    order_status: enums.OrderStatus
+    order_status: Optional[enums.OrderStatus]
+    creation_time: Optional[str]
+    change_time: Optional[str]
 
 
 class MarketDataUpdate(ServerMessage):

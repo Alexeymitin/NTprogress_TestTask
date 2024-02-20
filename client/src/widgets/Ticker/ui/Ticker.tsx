@@ -1,47 +1,51 @@
-import { ChangeEvent, FormEvent, useCallback, useState } from 'react';
+import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Instrument, InstrumentSelect } from 'src/entities/Instrument';
 import { Button, ButtonTheme } from 'src/shared/ui/Button/Button';
 import cls from './Ticker.module.scss';
 import Decimal from 'decimal.js';
-import { OrderSide } from 'src/Enums';
-import { ClientMessage } from 'src/entities/Models/ClientMessages';
-import { ws } from 'src/shared/websocket/websocket';
+import { ClientMessageType, OrderSide, ServerMessageType } from 'src/shared/websocket/model/types/Enums';
+import WSConnector from 'src/shared/websocket/WSClient';
+import { ServerEnvelope } from 'src/shared/websocket/model/types/ServerMessages';
+import { ClientEnvelope } from 'src/shared/websocket/model/types/ClientMessages';
 
-export interface PlaceOrder extends ClientMessage {
-    instrument: Instrument;
-    side: OrderSide;
-    amount: Decimal;
-    price: Decimal;
+interface TickerProps {
+	saveData: (message: ServerEnvelope) => void;
 }
 
-export enum ClientMessageType {
-    subscribeMarketData = 1,
-    unsubscribeMarketData,
-    placeOrder,
-    cancelOrder
-}
-
-export interface Message {
-	messageType: ClientMessageType;
-	message: object;
-}
-
-export const Ticker = () => {
+export const Ticker = ({saveData}: TickerProps) => {
 	const [instrument, setInstrument] = useState<Instrument>(Instrument.eur_rub);
 	const [amount, setAmount] = useState<Decimal>(new Decimal(0.00));
 	const [side, setSide] = useState<OrderSide>(OrderSide.buy);
-	const [priceBuy, setPriceBuy] = useState<Decimal>(new Decimal(0.00));
-	const [priceSell, setPriceSell] = useState<Decimal>(new Decimal(0.00));
+	const [priceBuy, setPriceBuy] = useState<Decimal>(new Decimal(50));
+	const [priceSell, setPriceSell] = useState<Decimal>(new Decimal(60));
+
+
+	const ws = useMemo(() => new WSConnector(), []);
+
+
+	useEffect(() => {
+		ws.connect();
+	
+		// return () => {
+		// 	ws.disconnect();
+		// };
+		// console.log(ws.orderR);
+	}, [ws]);
+	
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const formData: Message = {
+		const formData: ClientEnvelope = {
 			messageType: ClientMessageType.placeOrder,
 			message: {instrument, amount, side, price: side === OrderSide.buy ? priceBuy : priceSell}
 		};
+
+		const price = side === OrderSide.buy ? priceBuy : priceSell; 
 		
-		ws.send(JSON.stringify(formData));
-		console.log(JSON.stringify(formData));
+		ws.placeOrder(instrument, side, amount, price);
+		if (formData.message) {
+			saveData((formData.message as ServerEnvelope));
+		}	
 	};
 
 	const handleInstrumentChange = useCallback((value: Instrument) => {
@@ -49,12 +53,8 @@ export const Ticker = () => {
 	},[]);
 	
 	const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
-		e.target.value = e.target.value.replace(/[^0-9]/g, '');
+		// e.target.value = e.target.value.replace(/[^0-9]/g, '');
 		setAmount(new Decimal(e.target.value));
-	};
-
-	ws.onmessage = function(event) {
-		console.log(event.data);
 	};
 
 	return (

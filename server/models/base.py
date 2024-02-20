@@ -6,7 +6,7 @@ import decimal
 from typing import TypeVar
 
 import pydantic
-
+from pydantic.alias_generators import to_camel, to_pascal
 from enums import ClientMessageType, ServerMessageType
 
 
@@ -35,6 +35,7 @@ class Message(pydantic.BaseModel, abc.ABC):
     class Config:
         frozen = True
         extra = pydantic.Extra.forbid
+        alias_generator = snake_to_camel
 
     @abc.abstractmethod
     def get_type(self): ...

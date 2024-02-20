@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 import json
 import random
 
@@ -45,14 +46,37 @@ async def place_order_processor(
 ):
     from models import server_messages
 
-    random_status = random.choice(list(OrderStatus))
-    random_status_value = random_status.value
-    random_status_name = random_status.name
-    message["status"] = random_status_name 
-    order_id = await OrderRepository.add_one(message)
-    str_order_id = str(order_id)
-    orders = await OrderRepository.get_all()
-    for order in orders:
-            print(f"Order ID: {order.id}, Status: {order.status}, Side: {order.side}, Price: {order.price}, Amount: {order.amount}, Instrument: {order.instrument}")
-    # await websocket.send_json({"status": random_status_name, "order_id": str_order_id})
-    return server_messages.ExecutionReport(order_id=str_order_id, order_status=random_status_value)
+    order = await OrderRepository.add_one(dict(message))
+
+    asyncio.create_task(process_order_and_notify(order.id, server, websocket))
+   
+    return server_messages.ExecutionReport(
+        orderId=str(order.id), 
+        orderStatus=order.status, 
+        creationTime=str(order.creation_time), 
+        changeTime=str(order.change_time)
+    )
+    
+
+
+async def process_order_and_notify(
+        order_id, 
+        server: NTProServer,
+        websocket: fastapi.WebSocket,
+):
+    from models import server_messages
+
+    await asyncio.sleep(3)
+
+    # Случайным образом выбираем новый статус для заявки (симуляция исполнения заявок)
+    new_status = random.choice([OrderStatus.filled, OrderStatus.rejected])
+
+    updated_order = await OrderRepository.update_status(order_id, new_status)
+    
+    await server.send(server_messages.ExecutionReport(
+        orderId=str(updated_order.id), 
+        orderStatus=new_status, 
+        creationTime='',
+        changeTime=str(updated_order.change_time)
+    ), websocket)
+   

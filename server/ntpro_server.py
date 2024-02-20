@@ -21,7 +21,7 @@ class NTProServer:
             raw_envelope = await websocket.receive_json()
 
             try:
-                envelope = client_messages.ClientEnvelope.parse_obj(raw_envelope)
+                envelope = client_messages.ClientEnvelope.model_validate(raw_envelope)
                 message = envelope.get_parsed_message()
             except pydantic.ValidationError as ex:
                 await self.send(server_messages.ErrorInfo(reason=str(ex)), websocket)
@@ -32,6 +32,6 @@ class NTProServer:
             await self.send(response, websocket)
 
     @staticmethod
-    async def send(message: base.MessageT, websocket: fastapi.WebSocket):
-        await websocket.send_json(server_messages.ServerEnvelope(message_type=message.get_type(),
-                                                                 message=message.dict()).dict())
+    async def send(message: base.MessageT, websocket: fastapi.WebSocket):     
+        await websocket.send_json(server_messages.ServerEnvelope(messageType=message.get_type(),
+                                                                 message=message.model_dump(by_alias=True)).model_dump(by_alias=True))
