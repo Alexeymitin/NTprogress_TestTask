@@ -1,7 +1,35 @@
-.tableWrapper {
+.table {
+	border: 1px solid #eee;
+	table-layout: fixed;
 	width: 100%;
+	margin-bottom: 20px;
+}
+.table th {
+	font-weight: bold;
+	padding: 12px;
+	background: #efefef;
+	border: 1px solid #dddddd;
+	position: relative;
+}
+.table td {
+	padding: 5px 10px;
+	border: 1px solid #eee;
+	text-align: left;
+}
+.table tbody tr:nth-child(odd) {
+	background: #fff;
+}
+.table tbody tr:nth-child(even) {
+	background: #f7f7f7;
+}
+
+.buttonWrapper {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
+	position: absolute;
+	right: 5px;
+	top: 50%;
+	transform: translateY(-50%);
 }

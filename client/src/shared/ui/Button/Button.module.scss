@@ -7,11 +7,19 @@
 }
 
 .buy {
+	border-radius: 10px;
 	background: rgba(245, 96, 96, 0.904);
+	&:hover {
+		background: rgba(247, 41, 41, 0.904);
+	}
 }
 
 .sell {
+	border-radius: 10px;
 	background: rgba(122, 243, 122, 0.884);
+	&:hover {
+		background: rgba(72, 245, 72, 0.884);
+	}
 }
 
 .clear {

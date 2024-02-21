@@ -47,14 +47,19 @@ async def place_order_processor(
     from models import server_messages
 
     order = await OrderRepository.add_one(dict(message))
-
+    # all_orders = await OrderRepository.get_all()
+    # print(all_orders)
     asyncio.create_task(process_order_and_notify(order.id, server, websocket))
    
     return server_messages.ExecutionReport(
-        orderId=str(order.id), 
+        orderId=str(order.id),
+        creationTime=str(order.creation_time),
+        changeTime=str(order.change_time),
         orderStatus=order.status, 
-        creationTime=str(order.creation_time), 
-        changeTime=str(order.change_time)
+        side=order.side,
+        price=str(order.price),
+        amount=str(order.amount),
+        instrument=order.instrument       
     )
     
 
@@ -66,17 +71,15 @@ async def process_order_and_notify(
 ):
     from models import server_messages
 
-    await asyncio.sleep(3)
-
     # Случайным образом выбираем новый статус для заявки (симуляция исполнения заявок)
+    await asyncio.sleep(3)   
     new_status = random.choice([OrderStatus.filled, OrderStatus.rejected])
 
     updated_order = await OrderRepository.update_status(order_id, new_status)
     
-    await server.send(server_messages.ExecutionReport(
-        orderId=str(updated_order.id), 
-        orderStatus=new_status, 
-        creationTime='',
-        changeTime=str(updated_order.change_time)
+    await server.send(server_messages.UpdateReport(
+        orderId=str(updated_order.id),
+        changeTime=str(updated_order.change_time),
+        orderStatus=new_status       
     ), websocket)
    

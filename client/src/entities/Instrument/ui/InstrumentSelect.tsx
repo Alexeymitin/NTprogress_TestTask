@@ -12,6 +12,7 @@ interface InstrumentSelectProps {
 }
 
 const options = [
+	{value: '', content: 'Выберите инструмент'},
 	{value: Instrument.eur_rub, content: Instrument.eur_rub},
 	{value: Instrument.eur_usd, content: Instrument.eur_usd},
 	{value: Instrument.usd_rub, content: Instrument.usd_rub}

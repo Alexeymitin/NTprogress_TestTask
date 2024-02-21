@@ -26,3 +26,20 @@
 	justify-content: space-between;
 	align-items: center;
 }
+
+.priceWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+	width: 100%;
+}
+
+.price {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50%;
+	height: 50px;
+	border: 1px solid black;
+}

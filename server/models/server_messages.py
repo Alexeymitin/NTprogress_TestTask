@@ -1,4 +1,5 @@
 from __future__ import annotations
+import decimal
 
 import uuid
 from typing import Optional, TypeVar
@@ -24,10 +25,19 @@ class SuccessInfo(ServerMessage):
 
 class ExecutionReport(ServerMessage):
     order_id: str
-    order_status: Optional[enums.OrderStatus]
-    creation_time: Optional[str]
-    change_time: Optional[str]
+    creation_time: str
+    change_time: str
+    order_status: enums.OrderStatus
+    side: str
+    price: float
+    amount: float
+    instrument: enums.Instrument
 
+class UpdateReport(ServerMessage):
+    order_id: str
+    change_time: str
+    order_status: enums.OrderStatus
+    
 
 class MarketDataUpdate(ServerMessage):
     subscription_id: uuid.UUID
@@ -47,5 +57,6 @@ _SERVER_MESSAGE_TYPE_BY_CLASS = bidict.bidict({
     ErrorInfo: enums.ServerMessageType.error,
     ExecutionReport: enums.ServerMessageType.execution_report,
     MarketDataUpdate: enums.ServerMessageType.market_data_update,
+    UpdateReport: enums.ServerMessageType.update_report
 })
 ServerMessageT = TypeVar('ServerMessageT', bound=ServerMessage)

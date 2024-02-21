@@ -10,6 +10,7 @@ export enum ServerMessageType {
     error,
     executionReport,
     marketDataUpdate,
+    updateReport
 }
 
 export enum OrderSide {

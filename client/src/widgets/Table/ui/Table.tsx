@@ -1,6 +1,9 @@
-import 'react-tabulator/lib/styles.css';
+/* eslint-disable max-len */
 import cls from './Table.module.scss';
 import { Order } from 'src/entities/Order';
+import { OrderSide, OrderStatus } from 'src/shared/websocket/model/types/Enums';
+import { useSortData } from 'src/shared/lib/hooks/useSortData';
+import { Button, ButtonTheme } from 'src/shared/ui/Button/Button';
 
 interface Column {
 	title: string;
@@ -12,45 +15,66 @@ export interface TableProps {
 }
 
 export const Table = (props: TableProps) => {
-
 	const {data, columns} = props;
+	const {items, requestSortAsc, requestSortDesc, requestSort} = useSortData(data);
+
+	// const getClassNamesFor = (name: string) => {
+	// 	if (!sortConfig) {
+	// 		return;
+	// 	}
+	// 	return sortConfig.key === name ? sortConfig.direction : undefined;
+	// };
 
 	return (
-		<table className={cls.tableWrapper}>
-			<thead>
+		<table className={cls.table}>
+			<thead className={cls.header}>
 				<tr>
 					{columns.map((column, index) => (
-						<th key={index}>
+						<th key={`${index} - ${column.title}`}>
 							{column.title}
+							<div className={cls.buttonWrapper}>
+								<Button 
+									onClick={() => requestSortDesc(column.title)} 
+									theme={ButtonTheme.CLEAR}
+								>
+									▲
+								</Button>
+								<Button 
+									onClick={() => requestSortAsc(column.title)} 
+									theme={ButtonTheme.CLEAR}
+								>
+									▼
+								</Button>
+							</div>
 						</th>
 					))}
 				</tr>
 			</thead>
-			<tbody>
-				{data.map((value, index) => (
-					<tr key={`${index}- ${value.id}`}>
+			<tbody className={cls.header}>
+				{items.map((item, index) => (
+					<tr key={`${index}- ${item.orderId}`}>
 						<td>
-							{value.id}
+							{index + 1}
 						</td>
 						<td>
-							{value.creationTime}
+							{item.creationTime}
 						</td>
 						<td>
-							{value.changeTime}						</td>
+							{item.changeTime}						</td>
 						<td>
-							{value.orderStatus}
+							{OrderStatus[item.orderStatus as unknown as keyof typeof OrderStatus]}
 						</td>
 						<td>
-							{value.side}
+							{OrderSide[item.side as keyof typeof OrderSide]}
 						</td>
 						<td>
-							{value.price.toString()}
+							{item.price}
 						</td>
 						<td>
-							{value.amount.toString()}
+							{item.amount}
 						</td>
 						<td>
-							{value.instrument}
+							{item.instrument}
 						</td>
 					</tr>					
 				))}

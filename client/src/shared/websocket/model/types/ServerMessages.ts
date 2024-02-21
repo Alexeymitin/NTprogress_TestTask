@@ -1,5 +1,6 @@
 import {Instrument, OrderStatus, ServerMessageType} from './Enums';
 import {Envelope, Message, Quote} from './Base';
+import Decimal from 'decimal.js';
 
 export interface ServerEnvelope extends Envelope {
     messageType: ServerMessageType
@@ -18,11 +19,21 @@ export interface SuccessInfo extends ServerMessage {
 
 }
 
+export interface UpdateReport extends ServerMessage {
+    orderId: string
+    changeTime?: string
+    orderStatus: OrderStatus  
+}
+
 export interface ExecutionReport extends ServerMessage {
     orderId: string
-    orderStatus: OrderStatus
-    creationTime?: string
+    creationTime: string
     changeTime?: string
+    orderStatus: OrderStatus
+    side: string
+    price: number
+    amount: number
+    instrument: Instrument 
 }
 
 export interface MarketDataUpdate extends ServerMessage {

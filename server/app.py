@@ -43,18 +43,6 @@ async def websocket_endpoint(websocket: fastapi.WebSocket):
     await websocket.send_json("Connection established")
     try:
         await server.serve(websocket)
-        # while True:
-        #     message = await websocket.receive_json()
-        #     message_type = message.get("messageType")
-        #     if message_type == ClientMessageType.subscribe_market_data:
-        #         response = await subscribe_market_data_processor(server, websocket, message.get("message"))
-        #     elif message_type == ClientMessageType.unsubscribe_market_data:
-        #         response = await unsubscribe_market_data_processor(server, websocket, message.get("message"))
-        #     elif message_type == ClientMessageType.place_order:
-        #         response = await place_order_processor(server, websocket, message.get("message"))
-        #     else:
-        #         response = {"error": "Invalid message type"}
-        #     await websocket.send_json(response.model_dump())
     except fastapi.WebSocketDisconnect:
         server.disconnect(websocket)
         await websocket.send_json("Connection disconnected")

@@ -6,6 +6,7 @@ import { ChangeEvent, useMemo } from 'react';
 export interface SelectOption<T extends string> {
 	value: T;
 	content: string;
+	disabled?: boolean;
 }
 
 interface SelectProps<T extends string> {
@@ -36,6 +37,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
 			className={cls.option}
 			value={opt.value}
 			key={opt.value}
+			disabled={opt.disabled}
 		>
 			{opt.content}
 		</option>

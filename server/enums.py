@@ -15,7 +15,7 @@ class ServerMessageType(enum.IntEnum):
     error = enum.auto()
     execution_report = enum.auto()
     market_data_update = enum.auto()
-
+    update_report = enum.auto()
 
 class OrderSide(enum.IntEnum):
     buy = enum.auto()

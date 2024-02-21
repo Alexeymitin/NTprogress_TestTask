@@ -22,7 +22,8 @@ class OrderRepository:
 			query = select(OrderTable)
 			result = await session.execute(query)
 			order_models = result.scalars().all()
-			return order_models
+			orders_data = [order.__dict__ for order in order_models]
+			return orders_data
 	
 	@classmethod
 	async def update_status(cls, order_id, new_status):

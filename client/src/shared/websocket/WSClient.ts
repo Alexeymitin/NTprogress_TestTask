@@ -2,19 +2,20 @@
 import {ClientMessage} from './model/types/ClientMessages';
 import {ClientMessageType, Instrument, OrderSide, ServerMessageType} from './model/types/Enums';
 import Decimal from 'decimal.js';
-import {ServerEnvelope} from './model/types/ServerMessages';
+import { ServerEnvelope, UpdateReport} from './model/types/ServerMessages';
+import { Order } from 'src/entities/Order';
 
 export default class WSConnector {
-	connection: WebSocket | undefined;
-	order: ServerEnvelope | undefined;
-	
-	orderR: ServerEnvelope | undefined = undefined;
+	connection: WebSocket | undefined;	
 
 	constructor() {
 		this.connection = undefined;
 	}
 
-	connect = () => {
+	connect = (
+		getOrder: (data: Order) => void,
+		updateOrderStatus: (updatedData: UpdateReport) => void
+	) => {
 		this.connection = new WebSocket('ws://127.0.0.1:8000/ws/');
 		this.connection.onclose = () => {
 			this.connection = undefined;
@@ -31,7 +32,7 @@ export default class WSConnector {
 
 		this.connection.onmessage = (event) => {
 			const message: ServerEnvelope = JSON.parse(event.data);
-			console.log(message);
+
 			switch (message.messageType) {
 			case ServerMessageType.success:
 				console.log(`success: ${message.message} и ${message.messageType}`);
@@ -40,11 +41,15 @@ export default class WSConnector {
 				console.log(`error: ${message.message} и ${message.messageType}`);
 				break;
 			case ServerMessageType.executionReport:
-				console.log(`executionReport: ${message.message.orderStatus} и ${message.messageType} и ${message.message.creationTime} ${message.message.changeTime}`);
-				this.orderR = message;
+				console.log(`executionReport: ${message.message.orderId} ${message.message.orderStatus} и ${message.messageType} и ${message.message.creationTime} ${message.message.changeTime}`);
+				getOrder(message.message);
 				break;
 			case ServerMessageType.marketDataUpdate:
 				console.log(`marketDataUpdate: ${message.message} и ${message.messageType}`);
+				break;
+			case ServerMessageType.updateReport:
+				console.log(`updateReport: ${message.message.orderId} ${message.message.changeTime} и ${message.messageType}`);
+				updateOrderStatus(message.message);
 				break;
 			}
 		};
