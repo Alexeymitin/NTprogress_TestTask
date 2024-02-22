@@ -12,18 +12,19 @@
 - [Тестирование](#тестирование)
 - [To do](#to-do)
 - [Telegram](#Контакты)
-
-## Технологии клиента
-- [React](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [SCSS](https://sass-scss.ru/)
-- [Jest](https://jestjs.io/ru/)
-
-
-## Технологии сервера
-- [Python](https://www.python.org/)
-- [FastApi](https://fastapi.tiangolo.com/)
-- [SQLAlchemy](https://www.sqlalchemy.org/)
+- 
+## Технологии:
+ ## Технологии клиента
+ - [React](https://react.dev/)
+ - [TypeScript](https://www.typescriptlang.org/)
+ - [SCSS](https://sass-scss.ru/)
+ - [Jest](https://jestjs.io/ru/)
+ 
+ 
+ ## Технологии сервера
+ - [Python](https://www.python.org/)
+ - [FastApi](https://fastapi.tiangolo.com/)
+ - [SQLAlchemy](https://www.sqlalchemy.org/)
 
 ### Требования
 Для установки и запуска проекта, необходимы:
