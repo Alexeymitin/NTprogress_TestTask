@@ -2,7 +2,7 @@
 import {ClientMessage} from './model/types/ClientMessages';
 import {ClientMessageType, Instrument, OrderSide, ServerMessageType} from './model/types/Enums';
 import Decimal from 'decimal.js';
-import { ErrorInfo, ServerEnvelope, UpdateReport} from './model/types/ServerMessages';
+import { ErrorInfo, ExecutionReport, MarketDataUpdate, ServerEnvelope, UpdateReport} from './model/types/ServerMessages';
 import { Order } from 'src/entities/Order';
 
 export default class WSConnector {
@@ -14,7 +14,8 @@ export default class WSConnector {
 
 	connect = (
 		getOrder: (data: Order) => void,
-		updateOrderStatus: (updatedData: UpdateReport) => void
+		updateOrderStatus: (updatedData: UpdateReport) => void,
+		subscribeMarketData: (subscribe: MarketDataUpdate) => void
 	) => {
 		this.connection = new WebSocket('ws://127.0.0.1:8000/ws/');
 		this.connection.onclose = () => {
@@ -32,26 +33,28 @@ export default class WSConnector {
 
 		this.connection.onmessage = (event) => {
 			const message: ServerEnvelope = JSON.parse(event.data);
-
+			let executionReport: ExecutionReport; 
+			let updateReport: UpdateReport;
+			let success: MarketDataUpdate;
 			switch (message.messageType) {
 			case ServerMessageType.success:
-				console.log(`success: ${message.message} и ${message.messageType}`);
+				success = message.message as MarketDataUpdate;
+				subscribeMarketData(success);
 				break;
 			case ServerMessageType.error:
 
 				console.log(`error: ${message.message} и ${message.messageType}`);
 				break;
 			case ServerMessageType.executionReport:
-				
-				console.log(`executionReport: ${message.message.orderId} ${message.message.orderStatus} и ${message.message.side} и ${message.message.creationTime} ${message.message.changeTime}`);
-				getOrder(message.message);
+				executionReport = message.message as ExecutionReport;				
+				getOrder(executionReport);
 				break;
 			case ServerMessageType.marketDataUpdate:
 				console.log(`marketDataUpdate: ${message.message} и ${message.messageType}`);
 				break;
 			case ServerMessageType.updateReport:
-				console.log(`updateReport: ${message.message.orderId} ${message.message.changeTime} и ${message.messageType}`);
-				updateOrderStatus(message.message);
+				updateReport = message.message as UpdateReport;
+				updateOrderStatus(updateReport);
 				break;
 			}
 		};

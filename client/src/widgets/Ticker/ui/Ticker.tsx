@@ -38,7 +38,6 @@ export const Ticker = ({onSubmit, onSubscribe}: TickerProps) => {
 	};
 
 	const handleInstrumentChange = useCallback((value: Instrument) => {
-		
 		setPriceBuy(mockPrices[value].buy);
 		setPriceSell(mockPrices[value].sell);
 		if (value > 0) {

@@ -3,7 +3,7 @@ import {Envelope, Message, Quote} from './Base';
 
 export interface ServerEnvelope extends Envelope {
     messageType: ServerMessageType
-    message: ExecutionReport 
+    message: ExecutionReport | UpdateReport | MarketDataUpdate
 }
 
 export interface ServerMessage extends Message {
@@ -38,5 +38,4 @@ export interface ExecutionReport extends ServerMessage {
 export interface MarketDataUpdate extends ServerMessage {
     subscriptionId: string
     instrument: Instrument
-    quotes: [Quote]
 }

@@ -4,7 +4,7 @@ import { Ticker } from 'src/widgets/Ticker';
 import cls from './MainPage.module.scss';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Order } from 'src/entities/Order';
-import { UpdateReport } from 'src/shared/websocket/model/types/ServerMessages';
+import { MarketDataUpdate, UpdateReport } from 'src/shared/websocket/model/types/ServerMessages';
 import WSConnector from 'src/shared/websocket/WSClient';
 import Decimal from 'decimal.js';
 import { Instrument, OrderSide } from 'src/shared/websocket/model/types/Enums';
@@ -17,7 +17,8 @@ const MainPage = () => {
 		ws.connect((data) => {
 			setOrders(prev => [...prev, data]);
 		},
-		updateOrderStatus
+		updateOrderStatus,
+		subscribe
 		);
 		
 	}, []);
@@ -31,6 +32,10 @@ const MainPage = () => {
 				return order;
 			});
 		});
+	};
+
+	const subscribe= (data: MarketDataUpdate) => {
+		
 	};
 
 	const placeOrder = (instrument: Instrument, side: OrderSide, amount: Decimal, price: Decimal) => {
