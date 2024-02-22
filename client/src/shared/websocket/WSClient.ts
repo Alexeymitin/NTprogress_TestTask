@@ -41,7 +41,8 @@ export default class WSConnector {
 				console.log(`error: ${message.message} и ${message.messageType}`);
 				break;
 			case ServerMessageType.executionReport:
-				console.log(`executionReport: ${message.message.orderId} ${message.message.orderStatus} и ${message.messageType} и ${message.message.creationTime} ${message.message.changeTime}`);
+				
+				console.log(`executionReport: ${message.message.orderId} ${message.message.orderStatus} и ${message.message.side} и ${message.message.creationTime} ${message.message.changeTime}`);
 				getOrder(message.message);
 				break;
 			case ServerMessageType.marketDataUpdate:

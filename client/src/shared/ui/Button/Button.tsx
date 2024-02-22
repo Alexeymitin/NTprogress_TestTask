@@ -6,6 +6,7 @@ export enum ButtonTheme {
 	SELL = 'sell',
 	BUY = 'buy',
 	CLEAR = 'clear',
+	DOWNLOAD = 'download'
 }
 
 export type ButtonType = 'button' | 'submit' | 'reset';

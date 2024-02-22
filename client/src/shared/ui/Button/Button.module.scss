@@ -30,6 +30,15 @@
 	outline: none;
 }
 
+.download {
+	border-radius: 10px;
+	width: 200px;
+	background: rgb(155, 155, 245);
+	&:hover {
+		background: rgb(112, 112, 245);
+	}
+}
+
 .disabled {
 	opacity: 0.5;
 }

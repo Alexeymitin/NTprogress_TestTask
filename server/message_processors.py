@@ -49,7 +49,7 @@ async def place_order_processor(
     order = await OrderRepository.add_one(dict(message))
     # all_orders = await OrderRepository.get_all()
     # print(all_orders)
-    asyncio.create_task(process_order_and_notify(order.id, server, websocket))
+    asyncio.create_task(update_order_status(order.id, server, websocket))
    
     return server_messages.ExecutionReport(
         orderId=str(order.id),
@@ -64,7 +64,7 @@ async def place_order_processor(
     
 
 
-async def process_order_and_notify(
+async def update_order_status(
         order_id, 
         server: NTProServer,
         websocket: fastapi.WebSocket,
