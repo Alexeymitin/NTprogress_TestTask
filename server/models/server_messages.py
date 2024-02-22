@@ -20,7 +20,7 @@ class ErrorInfo(ServerMessage):
 
 
 class SuccessInfo(ServerMessage):
-    message: str
+    message: MarketDataUpdate
 
 
 class ExecutionReport(ServerMessage):
@@ -42,7 +42,7 @@ class UpdateReport(ServerMessage):
 class MarketDataUpdate(ServerMessage):
     subscription_id: uuid.UUID
     instrument: enums.Instrument
-    quotes: list[Quote]
+    # quotes: list[Quote]
 
 
 class ServerEnvelope(Envelope):

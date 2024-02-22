@@ -4,22 +4,59 @@ import { Order } from 'src/entities/Order';
 import { Button, ButtonTheme } from 'src/shared/ui/Button/Button';
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator.min.css'; // theme
-import { ReactTabulator } from 'react-tabulator';
+import { ColumnDefinition, ReactTabulator } from 'react-tabulator';
 import { Options } from 'tabulator-tables';
 import { useRef } from 'react';
 import { Tabulator } from 'react-tabulator/lib/types/TabulatorTypes';
+import { CellComponent } from 'tabulator-tables';
 
-interface Column {
-	title: string;
-}
+const columns = [
+	{title: 'Id', field: 'orderId', formatter: 'rownum'},
+	{title: 'Creation time', field: 'creationTime'},
+	{title: 'Change time', field: 'changeTime'},
+	{title: 'Status', field: 'orderStatus', formatter: function(cell: CellComponent) {
+		switch (cell.getValue()) {
+		case 1:
+			cell.getElement().style.backgroundColor = 'rgb(112, 112, 245)';
+			return 'active';
+		case 2:
+			cell.getElement().style.backgroundColor = 'rgba(122, 243, 122, 0.884)';
+			return 'filled';
+		case 3:
+			cell.getElement().style.backgroundColor = 'rgba(245, 96, 96, 0.904)';
+			return 'rejected';
+		case 4:
+			return 'cancelled';
+		}
+	}},
+	{title: 'Side', field: 'side', formatter: function(cell: CellComponent) {
+		switch (cell.getValue()) {
+		case '1':
+			return 'buy';
+		case '2':
+			return 'sell';
+		}
+	}},
+	{title: 'Price', field: 'price'},
+	{title: 'Amount', field: 'amount'},
+	{title: 'Instrument', field: 'instrument', formatter: function(cell: CellComponent) {
+		switch (cell.getValue()) {
+		case 1:
+			return 'EUR/USD';
+		case 2:
+			return 'EUR/RUB';
+		case 3:
+			return 'USD/RUB';
+		}
+	}},
+];
 
 export interface TableProps {
 	data: Order[];
-	columns: Column[];
 }
 
 export const Table = (props: TableProps) => {
-	const {data, columns} = props;
+	const {data} = props;
 	let tableRef = useRef<Tabulator>(null);
 
 	const options: Options  = {
@@ -41,7 +78,7 @@ export const Table = (props: TableProps) => {
 		<>
 			<ReactTabulator 
 				onRef={(ref) => (tableRef = ref)}
-				columns={columns} 
+				columns={columns as unknown as ColumnDefinition[]} 
 				data={data} 
 				options={options} 
 				
@@ -49,59 +86,5 @@ export const Table = (props: TableProps) => {
 			/>
 			<Button theme={ButtonTheme.DOWNLOAD} onClick={downloadFile}>Скачать таблицу</Button>
 		</>
-		// <table className={cls.table}>
-		// 	<thead className={cls.header}>
-		// 		<tr>
-		// 			{columns.map((column, index) => (
-		// 				<th key={`${index} - ${column.title}`}>
-		// 					{column.title}
-		// 					<div className={cls.buttonWrapper}>
-		// 						<Button 
-		// 							onClick={() => requestSortDesc(column.title)} 
-		// 							theme={ButtonTheme.CLEAR}
-		// 						>
-		// 							▲
-		// 						</Button>
-		// 						<Button 
-		// 							onClick={() => requestSortAsc(column.title)} 
-		// 							theme={ButtonTheme.CLEAR}
-		// 						>
-		// 							▼
-		// 						</Button>
-		// 					</div>
-		// 				</th>
-		// 			))}
-		// 		</tr>
-		// 	</thead>
-		// 	<tbody className={cls.header}>
-		// 		{items.map((item, index) => (
-		// 			<tr key={`${index}- ${item.orderId}`}>
-		// 				<td>
-		// 					{index + 1}
-		// 				</td>
-		// 				<td>
-		// 					{item.creationTime}
-		// 				</td>
-		// 				<td>
-		// 					{item.changeTime}						</td>
-		// 				<td>
-		// 					{OrderStatus[item.orderStatus as unknown as keyof typeof OrderStatus]}
-		// 				</td>
-		// 				<td>
-		// 					{OrderSide[item.side as keyof typeof OrderSide]}
-		// 				</td>
-		// 				<td>
-		// 					{item.price}
-		// 				</td>
-		// 				<td>
-		// 					{item.amount}
-		// 				</td>
-		// 				<td>
-		// 					{item.instrument}
-		// 				</td>
-		// 			</tr>					
-		// 		))}
-		// 	</tbody>		
-		// </table>
 	);
 };

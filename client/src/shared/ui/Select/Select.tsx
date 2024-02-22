@@ -3,22 +3,22 @@ import { classNames } from 'src/shared/lib/classNames/classNames';
 import cls from './Select.module.scss';
 import { ChangeEvent, useMemo } from 'react';
 
-export interface SelectOption<T extends string> {
+export interface SelectOption<T extends number> {
 	value: T;
 	content: string;
 	disabled?: boolean;
 }
 
-interface SelectProps<T extends string> {
+interface SelectProps<T extends number> {
 	className?: string;
 	label?: string;
 	options?: SelectOption<T>[];
-	value?: T;
+	value?: number;
 	onChange?: (value: T) => void;
 	readonly?: boolean
 }
 
-export const Select = <T extends string>(props: SelectProps<T>) => {
+export const Select = <T extends number>(props: SelectProps<T>) => {
 	const {
 		className,
 		label,
@@ -29,7 +29,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
 	} = props;
 
 	const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-		onChange?.(e.target.value as T);
+		onChange?.(e.target.value as unknown as T);
 	};
 
 	const optionsList = useMemo(() => options?.map((opt) => (

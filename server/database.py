@@ -21,7 +21,7 @@ class OrderTable(Model):
 	__tablename__ = "orders"
 
 	id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
-	creation_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now())
+	creation_time: Mapped[datetime.datetime] = mapped_column(default=func.now())
 	change_time: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now(), onupdate=datetime.datetime.now)
 	status: Mapped[OrderStatus] = mapped_column(default=OrderStatus.active)
 	side: Mapped[OrderSide]

@@ -29,7 +29,7 @@ class OrderStatus(enum.IntEnum):
     cancelled = enum.auto()
 
 
-class Instrument(str, enum.Enum):
-    eur_usd = 'EUR/USD'
-    eur_rub = 'EUR/RUB'
-    usd_rub = 'USD/RUB'
+class Instrument(enum.IntEnum):
+    eur_usd = enum.auto()
+    eur_rub = enum.auto()
+    usd_rub = enum.auto()

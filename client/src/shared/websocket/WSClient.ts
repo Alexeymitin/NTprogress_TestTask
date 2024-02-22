@@ -2,7 +2,7 @@
 import {ClientMessage} from './model/types/ClientMessages';
 import {ClientMessageType, Instrument, OrderSide, ServerMessageType} from './model/types/Enums';
 import Decimal from 'decimal.js';
-import { ServerEnvelope, UpdateReport} from './model/types/ServerMessages';
+import { ErrorInfo, ServerEnvelope, UpdateReport} from './model/types/ServerMessages';
 import { Order } from 'src/entities/Order';
 
 export default class WSConnector {
@@ -38,6 +38,7 @@ export default class WSConnector {
 				console.log(`success: ${message.message} и ${message.messageType}`);
 				break;
 			case ServerMessageType.error:
+
 				console.log(`error: ${message.message} и ${message.messageType}`);
 				break;
 			case ServerMessageType.executionReport:

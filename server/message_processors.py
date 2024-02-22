@@ -23,8 +23,11 @@ async def subscribe_market_data_processor(
         message: client_messages.SubscribeMarketData,
 ):
     from models import server_messages
-
-    return server_messages.SuccessInfo(message="Successfully subscribed to market data")
+    subscription_id = str(uuid.uuid4())
+    return server_messages.MarketDataUpdate(
+        subscriptionId = subscription_id,
+        instrument = message.instrument
+    )
 
 
 async def unsubscribe_market_data_processor(
@@ -36,7 +39,9 @@ async def unsubscribe_market_data_processor(
 
     # TODO ...
 
-    return server_messages.SuccessInfo(message="Successfully unsubscribed from market data")
+    return server_messages.SuccessInfo(
+       
+    )
 
 
 async def place_order_processor(

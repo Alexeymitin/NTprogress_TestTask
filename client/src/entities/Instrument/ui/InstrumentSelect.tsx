@@ -1,8 +1,9 @@
-import { Instrument } from '../model/types/Instrument';
 import { memo, useCallback } from 'react';
 import cls from './InstrumentSelect.module.scss';
 import { classNames } from 'src/shared/lib/classNames/classNames';
 import { Select } from 'src/shared/ui/Select/Select';
+import { Instrument } from 'src/shared/websocket/model/types/Enums';
+import { InstrumentImplement } from '../model/types/Instrument';
 
 interface InstrumentSelectProps {
 	className?: string;
@@ -12,20 +13,20 @@ interface InstrumentSelectProps {
 }
 
 const options = [
-	{value: '', content: 'Выберите инструмент'},
-	{value: Instrument.eur_rub, content: Instrument.eur_rub},
-	{value: Instrument.eur_usd, content: Instrument.eur_usd},
-	{value: Instrument.usd_rub, content: Instrument.usd_rub}
+	{value: 0, content: 'Выберите инструмент'},
+	{value: Instrument.eur_rub, content: InstrumentImplement.eur_rub},
+	{value: Instrument.eur_usd, content: InstrumentImplement.eur_usd},
+	{value: Instrument.usd_rub, content: InstrumentImplement.usd_rub}
 ];
 
 export const InstrumentSelect = memo(({className, value, onChange, readonly}: InstrumentSelectProps) => {
 
-	const onChangeHandler = useCallback((value: string) => {
-		onChange?.(value as Instrument);
+	const onChangeHandler = useCallback((value: Instrument) => {
+		onChange?.(value as unknown as Instrument);
 	},[onChange]);
 
 	return (
-		<Select 
+		<Select<Instrument> 
 			className={classNames(cls.select, {}, [className])}
 			options={options}
 			value={value}

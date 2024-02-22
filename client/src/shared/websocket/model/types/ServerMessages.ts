@@ -1,10 +1,9 @@
 import {Instrument, OrderStatus, ServerMessageType} from './Enums';
 import {Envelope, Message, Quote} from './Base';
-import Decimal from 'decimal.js';
 
 export interface ServerEnvelope extends Envelope {
     messageType: ServerMessageType
-    message: ExecutionReport
+    message: ExecutionReport 
 }
 
 export interface ServerMessage extends Message {
