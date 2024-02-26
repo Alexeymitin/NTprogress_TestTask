@@ -3,7 +3,7 @@ import { MainPage } from 'src/pages/MainPage';
 
 const App = () => {
 	return (
-		<div>
+		<div data-testid='test-app'>
 			<Suspense fallback='Идет загрузка...'>
 				<MainPage/>
 			</Suspense>			

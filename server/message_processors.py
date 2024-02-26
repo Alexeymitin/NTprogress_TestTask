@@ -24,9 +24,8 @@ async def subscribe_market_data_processor(
 ):
     from models import server_messages
     subscription_id = str(uuid.uuid4())
-    return server_messages.MarketDataUpdate(
-        subscriptionId = subscription_id,
-        instrument = message.instrument
+    return server_messages.SuccessInfo(
+        subscriptionId = subscription_id
     )
 
 
@@ -37,10 +36,8 @@ async def unsubscribe_market_data_processor(
 ):
     from models import server_messages
 
-    # TODO ...
-
-    return server_messages.SuccessInfo(
-       
+    return server_messages.MarketDataUpdate(
+      subscriptionId = str(message.subscription_id)
     )
 
 
@@ -77,7 +74,7 @@ async def update_order_status(
     from models import server_messages
 
     # Случайным образом выбираем новый статус для заявки (симуляция исполнения заявок)
-    await asyncio.sleep(3)   
+    await asyncio.sleep(5)   
     new_status = random.choice([OrderStatus.filled, OrderStatus.rejected])
 
     updated_order = await OrderRepository.update_status(order_id, new_status)
@@ -87,4 +84,20 @@ async def update_order_status(
         changeTime=str(updated_order.change_time),
         orderStatus=new_status       
     ), websocket)
+
+
+async def cancel_order_processor(
+        server: NTProServer,
+        websocket: fastapi.WebSocket,
+        message: client_messages.CancelOrder,
+):
+    from models import server_messages
+
+    new_status = OrderStatus.cancelled
+    updated_order = await OrderRepository.update_status(uuid.UUID(message.order_id), new_status)
    
+    return server_messages.UpdateReport(
+        orderId=str(updated_order.id),
+        changeTime=str(updated_order.change_time),
+        orderStatus=new_status       
+    )

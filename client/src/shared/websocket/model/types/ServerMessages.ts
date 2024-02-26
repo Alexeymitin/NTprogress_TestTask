@@ -3,7 +3,7 @@ import {Envelope, Message, Quote} from './Base';
 
 export interface ServerEnvelope extends Envelope {
     messageType: ServerMessageType
-    message: ExecutionReport | UpdateReport | MarketDataUpdate
+    message: ExecutionReport | UpdateReport | MarketDataUpdate | ErrorInfo
 }
 
 export interface ServerMessage extends Message {
@@ -15,7 +15,7 @@ export interface ErrorInfo extends ServerMessage {
 }
 
 export interface SuccessInfo extends ServerMessage {
-
+    subscriptionId: string
 }
 
 export interface UpdateReport extends ServerMessage {
@@ -37,5 +37,4 @@ export interface ExecutionReport extends ServerMessage {
 
 export interface MarketDataUpdate extends ServerMessage {
     subscriptionId: string
-    instrument: Instrument
 }

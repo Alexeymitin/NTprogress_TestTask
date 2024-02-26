@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, memo, useCallback, useEffect, useState } from 'react';
 import { InstrumentSelect } from 'src/entities/Instrument';
 import { Button, ButtonTheme } from 'src/shared/ui/Button/Button';
 import cls from './Ticker.module.scss';
@@ -22,7 +22,7 @@ interface TickerProps {
 	onSubscribe: (instrument: Instrument) => void;
 }
 
-export const Ticker = ({onSubmit, onSubscribe}: TickerProps) => {
+export const Ticker = memo(({onSubmit, onSubscribe}: TickerProps) => {
 	const [instrument, setInstrument] = useState<Instrument>();
 	const [amount, setAmount] = useState<Decimal>(new Decimal(0.00));
 	const [side, setSide] = useState<OrderSide>(OrderSide.buy);
@@ -52,10 +52,11 @@ export const Ticker = ({onSubmit, onSubscribe}: TickerProps) => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className={cls.form}>
+		<form onSubmit={handleSubmit} className={cls.form} data-testid='ticker-form'>
 			<InstrumentSelect
 				value={instrument} 
 				onChange={handleInstrumentChange}
+				data-testid='ticker-select'
 			/>
 			<input 
 				type="text" 
@@ -63,10 +64,11 @@ export const Ticker = ({onSubmit, onSubscribe}: TickerProps) => {
 				placeholder='Введите объем заявки' 
 				className={cls.inputAmount}
 				maxLength={7}
+				data-testid='ticker-amount-input'
 			/>	
 			<div className={cls.priceWrapper}>
-				<div className={cls.price}>{priceBuy.toFixed(2).toString()}</div>
-				<div className={cls.price}>{priceSell.toFixed(2).toString()}</div>
+				<div className={cls.price} data-testid='ticker-price'>{priceBuy.toFixed(2).toString()}</div>
+				<div className={cls.price} data-testid='ticker-price'>{priceSell.toFixed(2).toString()}</div>
 			</div>
 			<div className={cls.buttonWrapper}>
 				<Button theme={ButtonTheme.BUY} type='submit' onClick={() => setSide(OrderSide.buy)}>BUY</Button>
@@ -74,4 +76,4 @@ export const Ticker = ({onSubmit, onSubscribe}: TickerProps) => {
 			</div>
 		</form>
 	);
-};
+});

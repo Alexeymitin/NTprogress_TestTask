@@ -2,14 +2,17 @@
 import {ClientMessage} from './model/types/ClientMessages';
 import {ClientMessageType, Instrument, OrderSide, ServerMessageType} from './model/types/Enums';
 import Decimal from 'decimal.js';
-import { ErrorInfo, ExecutionReport, MarketDataUpdate, ServerEnvelope, UpdateReport} from './model/types/ServerMessages';
+import { ErrorInfo, ExecutionReport, MarketDataUpdate, ServerEnvelope, SuccessInfo, UpdateReport} from './model/types/ServerMessages';
 import { Order } from 'src/entities/Order';
 
 export default class WSConnector {
 	connection: WebSocket | undefined;	
+	url: string | URL;
 
-	constructor() {
+	constructor(url: string) {
+		console.log('WSConnector instance created');
 		this.connection = undefined;
+		this.url = url;
 	}
 
 	connect = (
@@ -17,14 +20,14 @@ export default class WSConnector {
 		updateOrderStatus: (updatedData: UpdateReport) => void,
 		subscribeMarketData: (subscribe: MarketDataUpdate) => void
 	) => {
-		this.connection = new WebSocket('ws://127.0.0.1:8000/ws/');
-		this.connection.onclose = () => {
+		this.connection = new WebSocket(this.url);
+		this.connection.onclose = (event) => {
 			this.connection = undefined;
-			console.log('соединение закрыто');
+			console.log('WebSocket closed:', event);
 		};
 
-		this.connection.onerror = () => {
-
+		this.connection.onerror = (error) => {
+			console.error('WebSocket error:', error);
 		};
 
 		this.connection.onopen = () => {
@@ -35,25 +38,29 @@ export default class WSConnector {
 			const message: ServerEnvelope = JSON.parse(event.data);
 			let executionReport: ExecutionReport; 
 			let updateReport: UpdateReport;
-			let success: MarketDataUpdate;
+			let success: SuccessInfo;
+			let error: ErrorInfo;
 			switch (message.messageType) {
-			case ServerMessageType.success:
-				success = message.message as MarketDataUpdate;
+			case ServerMessageType.success:			
+				success = message.message as SuccessInfo;
+				console.log(`success: ${success.subscriptionId}}`);
 				subscribeMarketData(success);
 				break;
 			case ServerMessageType.error:
-
-				console.log(`error: ${message.message} и ${message.messageType}`);
-				break;
+				error = message.message as ErrorInfo;
+				console.log(`success: ${error.reason}}`);
+				throw Error(error.reason);
 			case ServerMessageType.executionReport:
 				executionReport = message.message as ExecutionReport;				
 				getOrder(executionReport);
 				break;
 			case ServerMessageType.marketDataUpdate:
 				console.log(`marketDataUpdate: ${message.message} и ${message.messageType}`);
+				
 				break;
 			case ServerMessageType.updateReport:
 				updateReport = message.message as UpdateReport;
+				console.log(`updateReport ${updateReport}`);
 				updateOrderStatus(updateReport);
 				break;
 			}
@@ -95,6 +102,15 @@ export default class WSConnector {
 				side,
 				amount,
 				price,
+			}
+		});
+	};
+
+	cancelOrder = (orderId: string) => {
+		this.send({
+			messageType: ClientMessageType.cancelOrder,
+			message: {
+				orderId
 			}
 		});
 	};

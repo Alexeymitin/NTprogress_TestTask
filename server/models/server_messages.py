@@ -20,7 +20,7 @@ class ErrorInfo(ServerMessage):
 
 
 class SuccessInfo(ServerMessage):
-    message: MarketDataUpdate
+    subscription_id: str
 
 
 class ExecutionReport(ServerMessage):
@@ -41,7 +41,7 @@ class UpdateReport(ServerMessage):
 
 class MarketDataUpdate(ServerMessage):
     subscription_id: str
-    instrument: enums.Instrument
+    # instrument: enums.Instrument
     # quotes: list[Quote]
 
 

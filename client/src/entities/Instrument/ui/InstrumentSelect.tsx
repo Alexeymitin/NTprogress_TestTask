@@ -19,7 +19,14 @@ const options = [
 	{value: Instrument.usd_rub, content: InstrumentImplement.usd_rub}
 ];
 
-export const InstrumentSelect = memo(({className, value, onChange, readonly}: InstrumentSelectProps) => {
+export const InstrumentSelect = memo((props: InstrumentSelectProps) => {
+	const {
+		className, 
+		value, 
+		onChange, 
+		readonly,
+		...otherProps
+	} = props;
 
 	const onChangeHandler = useCallback((value: Instrument) => {
 		onChange?.(value as unknown as Instrument);
@@ -32,6 +39,7 @@ export const InstrumentSelect = memo(({className, value, onChange, readonly}: In
 			value={value}
 			onChange={onChangeHandler}
 			readonly={readonly}
+			{...otherProps}
 		/>
 	);
 });
