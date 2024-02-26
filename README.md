@@ -127,37 +127,11 @@ instrument	integer	Идентификатор инструмента, на ко�
 }
 ...
 
-CancelOrder
-
-...
-
-SuccessInfo
-
-...
-
-ErrorInfo
-
-...
-
-ExecutionReport
-
-...
-
-MarketDataUpdate
-
-...
-
-
-
-### Работа с данными
-
-
-
-
-## To do
-- [ ] Добавить виртуализацию
-- [ ] Рефакторинг
-- [ ] Адаптив
+### CancelOrder messageType=4
+{
+    "messageType": 4,
+    "message": {orderId: '6a97ca0c-1fc6-4bc8-a005-2fd95640f559'}
+}
 
 ## Контакты
 
